@@ -1,0 +1,16 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://xxx:3306/test?serverTimezone=GMT%2B8
+    username: xxx
+    password: xxx
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
