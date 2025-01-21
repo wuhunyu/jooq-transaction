@@ -3,7 +3,9 @@ package top.wuhunyu.jooq.transaction.config;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;
+import org.jooq.impl.ThreadLocalTransactionProvider;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +25,14 @@ public class DataSourceConfig {
 
     @Bean("jooqConfiguration")
     public org.jooq.Configuration jooqConfiguration(DataSource dataSource) {
-        org.jooq.Configuration configuration = new DefaultConfiguration();
+        final org.jooq.Configuration configuration = new DefaultConfiguration();
         configuration.set(SQLDialect.MYSQL);
         configuration.set(dataSource);
+        // 新增事务配置
+        final DataSourceConnectionProvider dataSourceConnectionProvider = new DataSourceConnectionProvider(dataSource);
+        final ThreadLocalTransactionProvider threadLocalTransactionProvider =
+                new ThreadLocalTransactionProvider(dataSourceConnectionProvider);
+        configuration.set(threadLocalTransactionProvider);
         return configuration;
     }
 

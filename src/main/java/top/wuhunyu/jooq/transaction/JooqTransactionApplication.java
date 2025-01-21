@@ -2,6 +2,7 @@ package top.wuhunyu.jooq.transaction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * jooq 事务验证程序
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@EnableAspectJAutoProxy(exposeProxy = true)
 public class JooqTransactionApplication {
 
     public static void main(String[] args) {

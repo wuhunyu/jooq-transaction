@@ -2,6 +2,7 @@ package top.wuhunyu.jooq.transaction.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.wuhunyu.jooq.transaction.codegen.tables.daos.TUserDao;
@@ -39,13 +40,15 @@ public class UserService4Jooq {
 
     @Transactional(rollbackFor = Exception.class)
     public TUser insertRetuning(final Long userId, final String userName) {
-        this.insert(userId, userName);
-        return this.selectById(userId);
+        final UserService4Jooq userService4Jooq = (UserService4Jooq) AopContext.currentProxy();
+        userService4Jooq.insert(userId, userName);
+        return userService4Jooq.selectById(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public TUser insertRetuningThrow(final Long userId, final String userName) {
-        final TUser tUser = this.insertRetuning(userId, userName);
+        final UserService4Jooq userService4Jooq = (UserService4Jooq) AopContext.currentProxy();
+        final TUser tUser = userService4Jooq.insertRetuning(userId, userName);
         // TODO: 手动异常，待删除
         int i = 10 / 0;
         return tUser;

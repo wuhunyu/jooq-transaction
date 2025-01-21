@@ -3,6 +3,7 @@ package top.wuhunyu.jooq.transaction.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.wuhunyu.jooq.transaction.domain.User;
@@ -36,13 +37,15 @@ public class UserService4Mybatis extends ServiceImpl<UserMapper, User> {
 
     @Transactional(rollbackFor = Exception.class)
     public User insertRetuning(final Long userId, final String userName) {
-        this.insert(userId, userName);
+        final UserService4Mybatis userService4Mybatis = (UserService4Mybatis) AopContext.currentProxy();
+        userService4Mybatis.insert(userId, userName);
         return this.selectById(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public User insertRetuningThrow(final Long userId, final String userName) {
-        final User user = this.insertRetuning(userId, userName);
+        final UserService4Mybatis userService4Mybatis = (UserService4Mybatis) AopContext.currentProxy();
+        final User user = userService4Mybatis.insertRetuning(userId, userName);
         // TODO: 手动异常，待删除
         int i = 10 / 0;
         return user;
