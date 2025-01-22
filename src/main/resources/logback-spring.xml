@@ -9,6 +9,11 @@
         </encoder>
     </appender>
 
+    <!-- 输出 jooq sql 日志 -->
+    <logger name="org.jooq.tools.LoggerListener" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
