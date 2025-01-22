@@ -9,6 +9,7 @@ import org.jooq.impl.ThreadLocalTransactionProvider;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 import javax.sql.DataSource;
 
@@ -29,7 +30,9 @@ public class DataSourceConfig {
         configuration.set(SQLDialect.MYSQL);
         configuration.set(dataSource);
         // 新增事务配置
-        final DataSourceConnectionProvider dataSourceConnectionProvider = new DataSourceConnectionProvider(dataSource);
+        final DataSourceConnectionProvider dataSourceConnectionProvider = new DataSourceConnectionProvider(
+                new TransactionAwareDataSourceProxy(dataSource));
+        // 使用 ThreadLocalTransactionProvider 事务管理器，避免 spring 声明式事务 和 jooq 的事务冲突问题
         final ThreadLocalTransactionProvider threadLocalTransactionProvider =
                 new ThreadLocalTransactionProvider(dataSourceConnectionProvider);
         configuration.set(threadLocalTransactionProvider);
